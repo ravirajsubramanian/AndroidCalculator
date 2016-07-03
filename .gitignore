@@ -40,3 +40,7 @@ captures/
 # Keystore files
 *.jks
 .DS_Store
+.idea/workspace.xml
+
+# Keystore files
+*.jks
