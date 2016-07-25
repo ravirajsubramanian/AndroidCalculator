@@ -1,15 +1,26 @@
 package com.firstapp.raviraj.calculator;
 
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.regex.Pattern;
 
-public class MainActivity extends AppCompatActivity {
+public class  MainActivity extends AppCompatActivity {
+
+
+    DrawerLayout mDrawerLayout;
+    NavigationView mNavigationView;
 
     private TextView screen;
     private String display = "";
@@ -21,8 +32,83 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mNavigationView = (NavigationView)findViewById(R.id.nav_view);
+
+        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout,
+                toolbar, R.string.app_name, R.string.app_name) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+               // getActionBar().setTitle(R.string.app_name);
+               // invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+               // getActionBar().setTitle("Opened");
+              //  invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       // getSupportActionBar().setHomeButtonEnabled(true);
+        mDrawerToggle.syncState();
+
+
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                mDrawerLayout.closeDrawers();
+                int id = menuItem.getItemId();
+                switch (id) {
+
+                    case R.id.nav_camera:
+                        Toast toast = Toast.makeText(MainActivity.this, "Import", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.TOP| Gravity.CENTER, 0, 0);
+                        toast.show();
+                        return true;
+
+                    case R.id.nav_gallery:
+                        Toast toast1 = Toast.makeText(MainActivity.this, "Gallery", Toast.LENGTH_SHORT);
+                        toast1.setGravity(Gravity.TOP| Gravity.CENTER, 0, 0);
+                        toast1.show();
+                        return true;
+                }
+
+                return false;
+            }
+
+
+        });
+
         screen = (TextView) findViewById(R.id.textView);
         screen.setText(display);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isNavDrawerOpen()) {
+            closeNavDrawer();
+        } else {
+            super.onBackPressed();
+        }
+    }
+    protected boolean isNavDrawerOpen() {
+        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START);
+    }
+
+    protected void closeNavDrawer() {
+        if (mDrawerLayout != null) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        }
     }
 
     private void UpdateScreen() {
